@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+OPT=${1?Error: no option given}
+BBSWITCH=/etc/modules-load.d/bbswitch.conf
+
+if [ "$OPT" = "status" ]; then
+    if [ -e "$BBSWITCH" ]; then
+        echo "Intel is on"
+    else
+        echo "NVIDIA is on"
+    fi
+fi
+
+if [ "$OPT" = "intel" ]; then
+    echo "Turning off NVIDIA dGPU..."
+    sudo cp bbswitch-load.conf /etc/modules-load.d/bbswitch.conf
+    sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
+    sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
+    echo "Intel Graphics ready to go. Please restart your system"
+fi
+
+if [ "$OPT" = "nvidia" ]; then
+    echo "Turning on NVIDIA dGPU..."
+    sudo rm /etc/modules-load.d/bbswitch.conf
+    sudo rm /etc/modprobe.d/bbswitch.conf
+    sudo rm /etc/modprobe.d/simpleswitch.conf
+    echo "Nvidia dGPU ready to go. Please restart your system"
+fi
