@@ -16,6 +16,7 @@ if [ "$OPT" = "intel" ]; then
     sudo cp bbswitch-load.conf /etc/modules-load.d/bbswitch.conf
     sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
     sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
+    sudo rm /etc/modprobe.d/blackscreen-nvidia-fix.conf
     echo "Intel Graphics ready to go. Please restart your system"
 fi
 
@@ -24,5 +25,6 @@ if [ "$OPT" = "nvidia" ]; then
     sudo rm /etc/modules-load.d/bbswitch.conf
     sudo rm /etc/modprobe.d/bbswitch.conf
     sudo rm /etc/modprobe.d/simpleswitch.conf
+    sudo cp blackscreen-nvidia-fix.conf /etc/modprobe.d/blackscreen-nvidia-fix.conf
     echo "Nvidia dGPU ready to go. Please restart your system"
 fi
