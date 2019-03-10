@@ -13,18 +13,40 @@ fi
 
 if [ "$OPT" = "intel" ]; then
     echo "Turning off NVIDIA dGPU..."
+    echo "Setting bbswith to start on boot..."
     sudo cp bbswitch-load.conf /etc/modules-load.d/bbswitch.conf
     sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
+    echo "Blacklist any NVIDIA drivers..."
     sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
-    sudo rm /etc/modprobe.d/blackscreen-nvidia-fix.conf
+    echo "Setting up SDDM config..."
+    sudo cp sddm-intel /usr/share/sddm/scripts/Xsetup
+    echo "Removing X.Org Nvidia config..."
+    sudo rm /etc/X11/xorg.conf
+    echo "Setting up GRUB Kernel Paramenters..."
+    sudo cp grub-intel /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    echo "Setting up Initamfs..."
+    sudo cp mkinit-intel.conf /etc/mkinitcpio.conf
+    sudo mkinitcpio -p linux
     echo "Intel Graphics ready to go. Please restart your system"
 fi
 
 if [ "$OPT" = "nvidia" ]; then
     echo "Turning on NVIDIA dGPU..."
+    echo "Removing bbswitch from boot..."
     sudo rm /etc/modules-load.d/bbswitch.conf
     sudo rm /etc/modprobe.d/bbswitch.conf
+    echo "Enabling NVIDIA driver..."
     sudo rm /etc/modprobe.d/simpleswitch.conf
-    sudo cp blackscreen-nvidia-fix.conf /etc/modprobe.d/blackscreen-nvidia-fix.conf
+    echo "Setting up SDDM config..."
+    sudo cp sddm-nvidia /usr/share/sddm/scripts/Xsetup
+    echo "Creating Nvidia Xorg config..."
+    sudo cp xorg-nvidia.conf /etc/X11/xorg.conf
+    echo "Setting up GRUB Kernel Paramenters..."
+    sudo cp grub-nvidia /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    echo "Setting up Initamfs..."
+    sudo cp mkinit-nvidia.conf /etc/mkinitcpio.conf
+    sudo mkinitcpio -p linux
     echo "Nvidia dGPU ready to go. Please restart your system"
 fi
