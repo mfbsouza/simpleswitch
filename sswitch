@@ -18,6 +18,11 @@ if [ "$OPT" = "intel" ]; then
     sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
     echo "Blacklist any NVIDIA drivers..."
     sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
+    echo "Removing NVIDIA Optimus X.ORG config"
+    sudo rm /etc/X11/xorg.conf
+    echo "Removing GDM Optimus config"
+    sudo rm /usr/share/gdm/greeter/autostart/optimus.desktop
+    sudo rm /etc/xdg/autostart/optimus.desktop
     echo "Setting up GRUB Kernel Paramenters..."
     sudo cp grub-intel /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
@@ -34,6 +39,11 @@ if [ "$OPT" = "nvidia" ]; then
     sudo rm /etc/modprobe.d/bbswitch.conf
     echo "Enabling NVIDIA driver..."
     sudo rm /etc/modprobe.d/simpleswitch.conf
+    echo "Setting up NVIDIA Optimus X.ORG config"
+    sudo cp nvidia-xorg.conf /etc/X11/xorg.conf
+    echo "Setting up GDM Optimus config"
+    sudo cp gdm-config.desktop /usr/share/gdm/greeter/autostart/optimus.desktop
+    sudo cp gdm-config.desktop /etc/xdg/autostart/optimus.desktop
     echo "Setting up GRUB Kernel Paramenters..."
     sudo cp grub-nvidia /etc/default/grub
     sudo grub-mkconfig -o /boot/grub/grub.cfg
