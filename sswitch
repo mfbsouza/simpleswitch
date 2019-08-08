@@ -18,18 +18,6 @@ if [ "$OPT" = "intel" ]; then
     sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
     echo "Blacklist any NVIDIA drivers..."
     sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
-    echo "Removing NVIDIA Optimus X.ORG config"
-    sudo rm /etc/X11/xorg.conf
-    echo "Removing SDDM Optimus config"
-    sudo cp Xsetup-default /usr/share/sddm/scripts/Xsetup
-    #sudo rm /usr/share/gdm/greeter/autostart/optimus.desktop
-    #sudo rm /etc/xdg/autostart/optimus.desktop
-    echo "Setting up GRUB Kernel Paramenters..."
-    sudo cp grub-intel /etc/default/grub
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
-    echo "Setting up Initramfs..."
-    sudo cp mkinit-intel.conf /etc/mkinitcpio.conf
-    sudo mkinitcpio -p linux
     echo "Intel Graphics ready to go. Please restart your system"
 fi
 
@@ -40,17 +28,5 @@ if [ "$OPT" = "nvidia" ]; then
     sudo rm /etc/modprobe.d/bbswitch.conf
     echo "Enabling NVIDIA driver..."
     sudo rm /etc/modprobe.d/simpleswitch.conf
-    echo "Setting up NVIDIA Optimus X.ORG config"
-    sudo cp nvidia-xorg.conf /etc/X11/xorg.conf
-    echo "Setting up SDDM Optimus config"
-    sudo cp Xsetup-optimus /usr/share/sddm/scripts/Xsetup
-    #sudo cp gdm-config.desktop /usr/share/gdm/greeter/autostart/optimus.desktop
-    #sudo cp gdm-config.desktop /etc/xdg/autostart/optimus.desktop
-    echo "Setting up GRUB Kernel Paramenters..."
-    sudo cp grub-nvidia /etc/default/grub
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
-    echo "Setting up Initramfs..."
-    sudo cp mkinit-nvidia.conf /etc/mkinitcpio.conf
-    sudo mkinitcpio -p linux
     echo "Nvidia dGPU ready to go. Please restart your system"
 fi
