@@ -11,6 +11,16 @@ if [ "$OPT" = "status" ]; then
     fi
 fi
 
+if [ "$OPT" = "block_nvidia" ]; then
+    echo "Turning off NVIDIA dGPU..."
+    echo "Setting bbswith to start on boot..."
+    sudo cp bbswitch-load.conf /etc/modules-load.d/bbswitch.conf
+    sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
+    echo "Blacklist any NVIDIA drivers..."
+    sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
+    echo "Nvidia card will turn off after next reboot"
+fi
+
 if [ "$OPT" = "intel" ]; then
     echo "Turning off NVIDIA dGPU..."
     echo "Setting bbswith to start on boot..."
@@ -18,6 +28,17 @@ if [ "$OPT" = "intel" ]; then
     sudo cp bbswitch.conf /etc/modprobe.d/bbswitch.conf
     echo "Blacklist any NVIDIA drivers..."
     sudo cp simpleswitch.conf /etc/modprobe.d/simpleswitch.conf
+    echo "Removing NVIDIA Optimus X.ORG config"
+    sudo rm /etc/X11/xorg.conf
+    sudo cp 20-intel.conf /etc/X11/xorg.conf.d/20-intel.conf
+    echo "Removing LightDM Nvidia Optimus config"
+    sudo rm /etc/lightdm/display_setup.sh
+    sudo cp lightdm-intel.conf /etc/lightdm/lightdm.conf
+    echo "Removing NVIDIA DMS kernel modsetting"
+    sudo cp grub-intel /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    sudo cp mkinit-intel.conf /etc/mkinitcpio.conf
+    sudo mkinitcpio -p linux
     echo "Intel Graphics ready to go. Please restart your system"
 fi
 
@@ -28,5 +49,17 @@ if [ "$OPT" = "nvidia" ]; then
     sudo rm /etc/modprobe.d/bbswitch.conf
     echo "Enabling NVIDIA driver..."
     sudo rm /etc/modprobe.d/simpleswitch.conf
+    echo "Setting up NVIDIA Optimus X.ORG Config"
+    sudo cp xorg-nvidia.conf /etc/X11/xorg.conf
+    sudo rm /etc/X11/xorg.conf.d/20-intel.conf
+    echo "Setting up LightDM Optimus config"
+    sudo cp display_setup.sh /etc/lightdm/display_setup.sh
+    sudo chmod +x /etc/lightdm/display_setup.sh
+    sudo cp lightdm-nvidia.conf /etc/lightdm/lightdm.conf
+    echo "Setting up NVIDIA DMS kernel modsetting"
+    sudo cp grub-nvidia /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    sudo cp mkinit-nvidia.conf /etc/mkinitcpio.conf
+    sudo mkinitcpio -p linux
     echo "Nvidia dGPU ready to go. Please restart your system"
 fi
