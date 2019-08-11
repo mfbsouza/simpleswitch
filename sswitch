@@ -21,6 +21,16 @@ if [ "$OPT" = "block_nvidia" ]; then
     echo "Nvidia card will turn off after next reboot"
 fi
 
+if [ "$OPT" = "vgpu" ]; then
+    echo "Enabling intel GVT-g on kernel & KVM config"
+    sudo cp vgpu-mkinit-intel.conf /etc/mkinitcpio.conf
+    sudo mkinitcpio -p linux
+    sudo cp vgpu-grub-intel /etc/default/grub
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    echo "Intel GVT-g ready to go. Restart your PC"
+	echo "to create a vgpu check gvtvgpu.service file"
+fi
+
 if [ "$OPT" = "intel" ]; then
     echo "Turning off NVIDIA dGPU..."
     echo "Setting bbswith to start on boot..."
