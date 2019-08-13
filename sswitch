@@ -11,6 +11,17 @@ if [ "$OPT" = "status" ]; then
     fi
 fi
 
+if [ "$OPT" = "help" ]; then
+	echo ""
+	echo "  options:"
+	echo "    help"
+	echo "    block_nvidia"
+	echo "    vgpu"
+	echo "    intel"
+	echo "    nvidia"
+	echo ""
+fi
+
 if [ "$OPT" = "block_nvidia" ]; then
     echo "Turning off NVIDIA dGPU..."
     echo "Setting bbswith to start on boot..."
